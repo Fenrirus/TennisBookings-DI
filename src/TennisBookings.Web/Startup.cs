@@ -27,7 +27,7 @@ namespace TennisBookings.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddAppConfiguration(Configuration)                
+            services.AddAppConfiguration(Configuration)
                 .AddBookingServices()
                 .AddBookingRules()
                 .AddCourtUnavailability()
@@ -35,14 +35,14 @@ namespace TennisBookings.Web
                 .AddStaffServices()
                 //.AddCourtServices() - replaced with Autofac registration in ConfigureContainer
                 .AddWeatherForecasting()
-                .AddNotifications()                
+                .AddNotifications()
                 .AddGreetings()
                 .AddCaching()
                 .AddTimeServices()
                 .AddAuditing();
-            
+
             services.Configure<CookiePolicyOptions>(options =>
-            {                
+            {
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
@@ -63,7 +63,7 @@ namespace TennisBookings.Web
 
             services.AddDbContext<TennisBookingDbContext>(options =>
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));           
+                    Configuration.GetConnectionString("DefaultConnection")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

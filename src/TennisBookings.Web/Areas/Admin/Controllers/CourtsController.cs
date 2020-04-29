@@ -16,14 +16,12 @@ namespace TennisBookings.Web.Areas.Admin.Controllers
     public class CourtsController : Controller
     {
         private readonly ICourtBookingService _courtBookingService;
-        private readonly ICourtMaintenanceService _courtMaintenanceService;
 
-        public CourtsController(ICourtBookingService courtBookingService, ICourtMaintenanceService courtMaintenanceService)
+        public CourtsController(ICourtBookingService courtBookingService)
         {
             _courtBookingService = courtBookingService;
-            _courtMaintenanceService = courtMaintenanceService;
         }
-        
+
         [HttpGet]
         [Route("Bookings/Upcoming")]
         public async Task<ActionResult> WeeklyBookings()
@@ -39,7 +37,7 @@ namespace TennisBookings.Web.Areas.Admin.Controllers
                 MemberName = $"{x.Member.Forename} {x.Member.Surname}"
             }).GroupBy(x => x.StartDateTime.Date);
 
-            var viewModel = new BookingListerViewModel {CourtBookings = bookingsViewModel, EndOfWeek = DateTime.UtcNow.GetEndOfWeek() };
+            var viewModel = new BookingListerViewModel { CourtBookings = bookingsViewModel, EndOfWeek = DateTime.UtcNow.GetEndOfWeek() };
 
             if (TempData.TryGetValue("BookingCancelled", out var successObject) is bool success)
             {
@@ -88,9 +86,9 @@ namespace TennisBookings.Web.Areas.Admin.Controllers
         }
 
         [Route("Maintenance/Upcoming")]
-        public async Task<ActionResult> UpcomingMaintenance()
+        public async Task<ActionResult> UpcomingMaintenance([FromServices]ICourtMaintenanceService courtMaintenanceService)
         {
-            var maintenanceSchedules = await _courtMaintenanceService.GetUpcomingMaintenance();
+            var maintenanceSchedules = await courtMaintenanceService.GetUpcomingMaintenance();
 
             var maintenanceViewModels = maintenanceSchedules.Select(x => new CourtMaintenanceViewModel
             {
